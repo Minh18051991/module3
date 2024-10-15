@@ -1,17 +1,17 @@
 CREATE DATABASE if not exists demo;
 use demo;
 
-create table student (
+create table if not exists student (
 id int primary key auto_increment,
 name varchar(100),
 age int,
 country varchar(50)
 );
-create table class (
+create table if not exists class (
 id int, 
 name varchar(50)
 );
-create table teacher(
+create table if not exists teacher(
 id int , 
 name varchar(100),
 age int, 
