@@ -101,4 +101,32 @@ FROM student st
 JOIN class cl ON st.class_id = cl.id
 WHERE st.point > 5;
 
+SELECT st.id, st.name, st.gender, st.birthday, st.email, st.point, cl.name AS class_name
+FROM student st
+JOIN class cl ON st.class_id = cl.id
+WHERE st.point = 4 OR st.point = 6 or st.point =8 ;
+
+SELECT point, COUNT(*)  as student_count
+FROM student 
+GROUP BY point ;
+
+SELECT point, COUNT(*) as student_count
+FROM student
+GROUP BY point
+HAVING point > 5 ;
+
+SELECT point , COUNT(*) as student_count
+FROM student
+GROUP BY point
+HAVING point > 5 AND student_count >=2;
+
+SELECT st.name, st.gender, st.birthday, st.email, st.point, cl.name AS class_name
+FROM student st
+JOIN class cl ON st.class_id = cl.id
+WHERE cl.name = "c1121g1"
+ORDER BY point DESC
+
+
+
+
 

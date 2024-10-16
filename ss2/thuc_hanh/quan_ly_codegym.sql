@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS gender (
 
 CREATE TABLE IF NOT EXISTS account (
     account_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL,
+    username VARCHAR(50) unique NOT NULL,
     password VARCHAR(100) NOT NULL
 );
 
