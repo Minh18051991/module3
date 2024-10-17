@@ -153,9 +153,12 @@ FROM student st
 ORDER BY st.point DESC
 LIMIT 3;
 -- Các học viên có điểm số cao nhất
-SELECT st.name, st.point
-FROM student st
-WHERE st.point = (SELECT MAX(point) FROM student);
+
+ SELECT st.name, st.point
+ FROM student st
+ WHERE st.point = (SELECT MAX(point) FROM student);
+
+
 
 -- Những giảng viên chưa từng giảng dạy
 SELECT instructor.id, instructor.name
