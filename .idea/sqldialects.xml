@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/case_study/quan_ly_khach_san.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/ss2/thuc_hanh/bai_tap_2.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/ss2/thuc_hanh/quan_ly_codegym_2.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/ss2/thuc_hanh/quan_ly_sinh_vien.sql" dialect="MySQL" />
   </component>
   <component name="SqlResolveMappings">
     <file url="file://$PROJECT_DIR$/ss2/thuc_hanh/bai_tap_2.sql" scope="{&quot;node&quot;:{  &quot;@negative&quot;:&quot;1&quot;,  &quot;group&quot;:{   &quot;@kind&quot;:&quot;root&quot;,   &quot;node&quot;:{    &quot;@negative&quot;:&quot;1&quot;   }  } }}" />
