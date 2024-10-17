@@ -73,7 +73,31 @@ update student set class_id = 2
 where student.name like "%hung";
 SET SQL_SAFE_UPDATES = 1;
 
-SELECT * FROM student;
+-- Bài tập ss4
+-- Hiển thị môn học có credit lớn nhất
+SELECT *
+FROM subject
+ORDER BY credit DESC
+LIMIT 1;
+
+-- Hiển thị các thông tin môn học có điểm thi lớn nhất.
+SELECT sb.subname, sb.id,sb.credit ,m.mark as mark
+FROM subject sb
+JOIN mark m ON sb.id = m.sub_id
+order by m.mark DESC
+limit 1;
+
+-- Hiển thị các thông tin sinh viên và điểm trung bình của mỗi sinh viên, xếp hạng theo thứ tự điểm giảm dần
+
+SELECT st.* , avg(mark.mark) as AVG
+FROM student st
+JOIN mark ON st.id = mark.student_id
+GROUP BY st.id
+ORDER BY AVG DESC;
+
+
+
+
 
  
  
