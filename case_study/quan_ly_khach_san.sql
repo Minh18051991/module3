@@ -199,12 +199,12 @@ VALUES ('villa'),
 
 INSERT INTO service (name, usable_area, price, limit_people, rental_period_id, room_type_id, standard, another_service,
                      pool_area, floor)
-VALUES ('Villa Beach Front', 25000, 10000000.0, 10, 1, 2, 'normal', NULL, NULL, 3),
-       ('House Princess 01', 14000, 5000000.0, 7, 2, 1, 'Có thêm bếp nướng', NULL, NULL, 2),
-       ('Room Twin 01', 5000, 1000000.0, 2, 2, NULL, 'normal', 'Có tivi', NULL, 4),
-       ('Villa No Beach Front', 22000, 9000000.0, 8, 1, 2, 'normal', 'Có hồ bơi', 300, 3),
-       ('House Princess 02', 10000, 4000000.0, 5, 2, 1, 'normal', 'Có thêm bếp nướng', NULL, 2),
-       ('Room Twin 02', 3000, 900000.0, 2, 2, NULL, 'normal', 'Có tivi', NULL, 4);
+VALUES ('Villa Beach Front', 25000, 10000000.0, 10, 3, 1, 'vip', 'có hồ bơi', 500, 4),
+       ('House Princess 01', 14000, 5000000.0, 7, 2, 2, 'vip', 'có thêm bếp nướng', NULL, 3),
+       ('Room Twin 01', 5000, 1000000.0, 2, 4, 3, 'normal', 'Có tivi', NULL, NULL),
+       ('Villa No Beach Front', 22000, 9000000.0, 8, 3, 1, 'normal', 'Có hồ bơi', 300, 3),
+       ('House Princess 02', 10000, 4000000.0, 5, 3, 2, 'normal', 'Có thêm bếp nướng', NULL, 2),
+       ('Room Twin 02', 3000, 900000.0, 2, 4, 3, 'normal', 'Có tivi', NULL, NULL);
 
 INSERT INTO contract (
     customer_id, employee_id, service_id, start_date, end_date, deposit
@@ -286,7 +286,46 @@ GROUP BY
 ORDER BY
     c.id;
 
---
+-- câu 6 hiển thị thông tin các  service chưa từng được sử dung từ tháng 1,2,3 năm 2021
+
+SELECT se.id          AS ma_dich_vu,
+       se.name        AS ten_dich_vu,
+       se.usable_area AS dien_tich,
+       se.price       As chi_phi_thue,
+       ro.name        AS loai_phong
+FROM service se
+         LEFT JOIN contract c on se.id = c.service_id AND
+                                 (c.start_date BETWEEN '2021-01-01' AND '2021-03-31')
+
+         LEFT JOIN room_type ro ON se.room_type_id = ro.id
+WHERE c.id IS NULL
+GROUP by se.id, se.name;
+
+-- hiển thị thông tin các service từng được đặt hàng trong năm 2020 nhưng chưa từng được đặt hàng trong năm 2021.
+SELECT
+    se.id AS ma_dich_vu,
+    se.name AS ten_dich_vu,
+    se.usable_area AS dien_tich,
+    se.limit_people AS so_nguoi_toi_da,
+    se.price AS chi_phi_thue,
+    ro.name AS loai_phong
+FROM
+    service se
+        LEFT JOIN contract c2020 ON se.id = c2020.service_id
+        AND c2020.start_date BETWEEN '2020-01-01' AND '2020-12-31'
+
+        LEFT JOIN contract c2021 ON se.id = c2021.service_id
+        AND c2021.start_date BETWEEN '2021-01-01' AND '2021-12-31'
+
+        LEFT JOIN room_type ro ON se.room_type_id = ro.id
+WHERE
+    c2020.id IS NOT NULL AND c2021.id IS NULL
+GROUP BY
+    se.id;
+
+-- câu 8
+
+
 
 
 

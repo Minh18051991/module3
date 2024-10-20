@@ -71,7 +71,9 @@ SELECT c.name AS cName, p.name AS pName
 FROM customer c
 JOIN order_bill ob ON c.id = ob.customer_id
 JOIN orderdetail od ON ob.id = od.order_bill_id
-JOIN product p ON od.product_id = p.id;
+JOIN product p ON od.product_id = p.id
+GROUP BY c.name, p.name;
+
 -- hiển thị khách hàng chưa từng mua hàng
 SELECT c.name AS cName
 FROM customer c
