@@ -323,7 +323,58 @@ WHERE
 GROUP BY
     se.id;
 
--- câu 8
+-- câu 8 :Hiển thị thông tin ho_ten khách hàng có trong hệ thống, với yêu cầu ho_ten không trùng nhau.
+Học viên sử dụng theo 3 cách khác nhau để thực hiện yêu cầu trên.
+-- cách 1
+SELECT DISTINCT name
+FROM customer;
+
+-- cách 2
+SELECT c.name
+FROM customer c
+GROUP BY c.name
+HAVING COUNT(*) = 1;
+-- cách 3
+SELECT name
+FROM (SELECT name FROM customer) AS customers
+GROUP BY name;
+-- câu 9 Thực hiện thống kê doanh thu theo tháng, nghĩa là tương ứng với mỗi tháng trong năm 2021 thì sẽ có bao nhiêu khách hàng thực hiện đặt phòng.
+SELECT MONTH(start_date) AS thang, COUNT(*) AS so_don_dat_phong
+FROM contract
+WHERE YEAR(start_date) = 2021
+GROUP BY MONTH(start_date);
+-- câu 10 Hiển thị thông tin tương ứng với từng hợp đồng thì đã sử dụng bao nhiêu dịch vụ đi kèm. Kết quả hiển thị bao gồm ma_hop_dong, ngay_lam_hop_dong, ngay_ket_thuc, tien_dat_coc, so_luong_dich_vu_di_kem (được tính dựa trên việc sum so_luong ở dich_vu_di_kem).
+
+SELECT
+    c.id AS ma_hop_dong,
+    c.start_date AS ngay_lam_hop_dong,
+    c.end_date AS ngay_ket_thuc,
+    c.deposit AS tien_dat_coc,
+    COALESCE(SUM(sc.quantity), 0) AS so_luong_dich_vu_di_kem
+FROM
+    contract c
+        LEFT JOIN
+    specific_contract sc ON c.id = sc.contract_id
+GROUP BY
+    c.id, c.start_date, c.end_date, c.deposit
+ORDER BY
+    c.id;
+
+-- câu 11 Hiển thị thông tin các dịch vụ đi kèm đã được sử dụng bởi những khách hàng có ten_loai_khach là “Diamond” và có dia_chi ở “Vinh” hoặc “Quảng Ngãi”.
+SELECT ads.*
+FROM addition_service ads
+         JOIN specific_contract sc ON ads.id = sc.addition_service_id
+         JOIN contract c ON sc.contract_id = c.id
+         JOIN customer cu ON c.customer_id = cu.id
+         JOIN customer_type ct ON cu.customer_type_id = ct.id
+WHERE ct.name = 'Diamond'
+  AND (cu.address LIKE '%Vinh' OR cu.address LIKE '%Quảng Ngãi');
+
+
+
+
+
+
 
 
 
