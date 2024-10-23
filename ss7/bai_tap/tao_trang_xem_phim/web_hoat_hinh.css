@@ -1,0 +1,60 @@
+body {
+    font-family: "Times New Roman", serif;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+.head-link {
+    display: flex;
+    background-color: #555;
+}
+.head-link a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 0 5px;
+}
+.head-link a:hover {
+    background-color: #777;
+}
+.content {
+    display: flex;
+    padding: 20px;
+}
+.left-content {
+    flex: 1;
+    background-color: #f1f1f1;
+    padding: 10px;
+}
+.right-content {
+    flex: 2;
+    padding-left: 20px;
+}
+.video-description {
+    margin-top: 20px;
+}
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+    }
+    .right-content {
+        padding-left: 0;
+    }
+}

@@ -1,0 +1,89 @@
+/* Reset cơ bản */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Chung */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+header {
+    background-color: #3b5998;
+    color: white;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex; /* Sử dụng Flexbox */
+    justify-content: space-between; /* Căn chỉnh không gian giữa các phần tử */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+header h1 {
+    margin-left: 20px; /* Khoảng cách bên trái cho tiêu đề */
+}
+
+nav {
+    margin-right: 20px; /* Khoảng cách bên phải cho nav */
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex; /* Sử dụng Flexbox */
+}
+
+nav ul li {
+    margin-left: 10px; /* Khoảng cách giữa các liên kết */
+}
+
+
+nav ul li a {
+    color: white; /* Màu chữ trắng */
+    text-decoration: none; /* Bỏ gạch chân */
+}
+
+nav ul li a:hover {
+    text-decoration: underline; /* Gạch chân khi hover */
+}
+
+/* Nội dung chính */
+.main-content {
+    display: flex;
+    margin-top: 60px; /* Để tránh header */
+    flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #f0f2f5;
+    width: 200px;
+    padding: 15px;
+}
+
+.sidebar h2 {
+    margin-bottom: 10px;
+}
+
+/* Nội dung chính */
+.content {
+    flex: 1; /* Chiếm phần còn lại */
+    padding: 15px;
+    background-color: #ffffff;
+}
+
+/* Footer */
+footer {
+    background-color: #3b5998;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}

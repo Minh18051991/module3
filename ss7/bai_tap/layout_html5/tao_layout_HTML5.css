@@ -1,0 +1,67 @@
+
+body {
+    font-family: Verdana, sans-serif;
+    font-size: 0.9em;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Đảm bảo body chiếm toàn bộ chiều cao màn hình */
+}
+
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+
+nav {
+    background-color: #f2f2f2;
+    padding: 10px;
+}
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+nav ul li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+
+.main-content {
+    display: flex;
+    margin: 10px;
+    flex: 1;
+}
+
+
+section {
+    flex: 0 0 70%;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+
+aside {
+    flex: 0 0 30%;
+    background-color: #f2f2f2;
+    padding: 10px;
+}
+
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
