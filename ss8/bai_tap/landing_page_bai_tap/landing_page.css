@@ -10,14 +10,7 @@ body {
     color: #333;
 }
 
-.header {
-    background-image: url("../gallery_bai_tap/ảnh header.jpg");
-    background-size: cover;
-    background-position: center;
-    color: white;
-    padding: 50px 0;
-    text-align: center;
-}
+
 
 .header h1 {
     font-size: 2.5rem;
@@ -89,4 +82,59 @@ body {
     position: relative;
     bottom: 0;
     width: 100%;
+}
+body {
+    font-family: Arial, sans-serif; /* Thay đổi font chữ */
+    background-color: #7096bb; /* Màu nền nhẹ */
+}
+.navbar-nav .nav-link {
+    color: #495057;
+    font-weight: 500;
+    z-index: 1000;
+}
+.navbar-nav .nav-link:hover {
+    color: #007bff;
+}
+.hero-section {
+    padding: 3rem 0;
+    display: flex;
+    align-items: center;
+}
+.hero-section h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #333; /* Màu chữ tối */
+}
+.hero-section p {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #555; /* Màu chữ trung bình */
+}
+.featured-products {
+    padding: 3rem 0;
+}
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* Tỷ lệ 16:9 */
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.highlight {
+    background-color: #0d1d2d; /* Nền sáng nhẹ để làm nổi bật */
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    text-align: center; /* Căn giữa nội dung */
+}
+.highlight img {
+    max-width: 100%; /* Đảm bảo ảnh không vượt quá chiều rộng của ô */
+    height: auto; /* Giữ tỷ lệ khung hình */
 }

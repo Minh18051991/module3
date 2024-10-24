@@ -5,41 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HandHeld Gaming Shop</title>
   <link rel="stylesheet" href="bootstrap.css">
-  <style>
-    /* Sử dụng Bootstrap và tùy chỉnh thêm */
-    .navbar-nav .nav-link {
-      color: #495057;
-      font-weight: 500;
-    }
-    .navbar-nav .nav-link:hover {
-      color: #007bff;
-    }
-    .hero-section {
-      background-image: url('tải xuống.jfif');
-      background-size: cover;
-      background-position: center;
-      height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    }
-    .hero-section h1 {
-      font-size: 3rem;
-      font-weight: 700;
-    }
-    .hero-section p {
-      font-size: 1.5rem;
-      font-weight: 400;
-    }
-    .featured-products {
-      padding: 3rem 0;
-    }
-    .product-card {
-      margin-bottom: 2rem;
-    }
-  </style>
+  <link rel="stylesheet" href="landing_page.css">
+
 </head>
 <body>
 <header>
@@ -77,9 +44,22 @@
 
 <main>
   <section class="hero-section">
-    <div class="container text-center">
-      <h1>Welcome to the HandHeld Gaming Shop</h1>
-      <p>Discover the best handheld gaming consoles and games</p>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="highlight">
+            <img src="images1.jfif" class="img-fluid" alt="Rog Ally">
+            <h5 class="card-title">Rog Ally</h5>
+            <p class="card-text">Chiếc console cầm tay mạnh mẽ với hiệu suất vượt trội và thiết kế tinh tế. Thưởng thức tất cả các trò chơi yêu thích của bạn mọi lúc, mọi nơi!</p>
+            <a href="#" class="btn btn-primary">Buy Now</a>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="video-container">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/o-UYry54SNI?si=UZizlNi6CxDf95i0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -87,17 +67,7 @@
     <div class="container">
       <h2 class="mb-4">Featured Products</h2>
       <div class="row">
-        <div class="col-md-4">
-          <div class="product-card">
-            <img src="images1.jfif" class="card-img-top" alt="Console 1">
-            <div class="card-body">
-              <h5 class="card-title">Console 1</h5>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              <a href="#" class="btn btn-primary">Buy Now</a>
-            </div>
-          </div>
-        </div>
-        <!-- Add more product cards here -->
+        <!-- Các sản phẩm nổi bật sẽ được thêm vào đây -->
       </div>
     </div>
   </section>
