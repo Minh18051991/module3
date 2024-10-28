@@ -11,7 +11,7 @@ public class ProductRepository implements IProductRepository {
     private int currentId = 1;
 
     public ProductRepository() {
-        // Thêm sản phẩm mẫu
+
         products.add(new Product(currentId++, "Product A", "Manufacturer A", 100.0, "Description A", 10));
         products.add(new Product(currentId++, "Product B", "Manufacturer B", 150.0, "Description B", 5));
     }
