@@ -20,7 +20,7 @@
 <p>Redirecting you to the product list...</p>
 
 <%
-
+  // Chuyển hướng đến trang danh sách sản phẩm
   response.sendRedirect("products?action=list");
 %>
 </body>
