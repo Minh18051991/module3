@@ -179,12 +179,12 @@ public class UserDAO implements IUserDAO {
 
         try {
             connection = BaseRepository.getConnectDB();
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(false); // Bắt đầu transaction
 
             // Gọi stored procedure và đăng ký OUT parameter
             callableStatement = connection.prepareCall("{CALL AddUser(?, ?, ?, ?)}");
             callableStatement.setString(1, user.getName());
-            callableStatement.setString(2, user.getEmail());
+            callableStatement.setString(2, user.getEmail()); // Nhập email có thể trùng lặp
             callableStatement.setString(3, user.getCountry());
             callableStatement.registerOutParameter(4, java.sql.Types.INTEGER); // Đăng ký OUT parameter
 
@@ -206,7 +206,10 @@ public class UserDAO implements IUserDAO {
 
             connection.commit(); // Cam kết transaction
         } catch (SQLException e) {
-            if (connection != null) connection.rollback(); // Hoàn tác nếu có lỗi
+            if (connection != null) {
+                connection.rollback(); // Hoàn tác nếu có lỗi
+                System.out.println("Transaction rolled back due to an error: " + e.getMessage());
+            }
             printSQLException(e);
         } finally {
             // Đóng kết nối và các tài nguyên
