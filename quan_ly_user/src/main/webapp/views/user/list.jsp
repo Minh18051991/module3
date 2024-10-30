@@ -12,30 +12,30 @@
         }
 
         function openModal() {
-            document.getElementById('searchModal').style.display = 'block';
+            document.getElementById('passwordModal').style.display = 'block';
         }
 
         function closeModal() {
-            document.getElementById('searchModal').style.display = 'none';
+            document.getElementById('passwordModal').style.display = 'none';
         }
     </script>
     <style>
         /* Modal Styles */
-        #searchModal {
+        #passwordModal {
             display: none;
             position: fixed;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
         }
         .modal-content {
             background-color: white;
             margin: 15% auto;
             padding: 20px;
-            width: 300px;
+            width: 400px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
@@ -46,22 +46,30 @@
     <h1>User Management System</h1>
     <h2>
         <a href='/users?action=create'>Create New User</a>
-        <a href="#" onclick="openModal()">Search by Country</a>
+        <a href="/users?action=showWithPassword" >Show Users with Password</a>
         <a href="/users?action=sortByName">Sort by Name</a>
     </h2>
 </center>
 
-<!-- Modal -->
-<div id="searchModal">
+<!-- Modal for Password List -->
+<div id="passwordModal">
     <div class="modal-content">
-        <h2>Search Users by Country</h2>
-        <form id="searchForm" action="/users" method="post">
-            <input type="hidden" name="action" value="search">
-            <label for="search_country">Country:</label>
-            <input type="text" id="search_country" name="search_country" required>
-            <input type="submit" value="Search">
-            <button type="button" onclick="closeModal()">Close</button>
-        </form>
+        <h2>User List with Password</h2>
+        <table border="1" cellpadding="5">
+            <tr>
+                <th>name</th>
+                <th>Email</th>
+                <th>Password</th>
+            </tr>
+            <c:forEach items="${showWithPassword}" var="user">
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.password}</td>
+                </tr>
+            </c:forEach>
+        </table>
+        <button type="button" onclick="closeModal()">Close</button>
     </div>
 </div>
 
@@ -70,7 +78,7 @@
         <caption><h2>User List</h2></caption>
         <tr>
             <th>ID</th>
-            <th>Username</th>
+            <th>name</th>
             <th>Email</th>
             <th>Country</th>
             <th>Action</th>

@@ -1,35 +1,40 @@
 package org.example.quan_ly_user.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.example.quan_ly_user.dto.UsersDTO;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO implements IUserDAO {
-    private String url = "jdbc:mysql://localhost:3306/demo_user";
-    private String user = "root";
-    private String password = "codegym";
-    private static final String INSERT_USER_SQL = "INSERT INTO users (name, email, country) VALUES (?,?,?)";
+
+    private static final String INSERT_USER_SQL = "{CALL AddUser(?, ?, ?, ?)}"; // Thêm OUT parameter
     private static final String SELECT_ALL_USERS_SQL = "SELECT * FROM users";
-    private static final String SELECT_USER_BY_ID_SQL = "SELECT * FROM users WHERE id =?";
-    private static final String UPDATE_USER_SQL = "UPDATE users SET name=?, email=?, country=? WHERE id=?";
-    private static final String DELETE_USER_SQL = "DELETE FROM users WHERE id=?";
-    private static final String SELECT_USER_BY_COUNTRY_SQL = "SELECT * FROM users WHERE country =?";
+    private static final String SELECT_USER_BY_ID_SQL = "{CALL GetUserById(?)}";
+    private static final String UPDATE_USER_SQL = "{CALL UpdateUser(?, ?, ?, ?)}";
+    private static final String DELETE_USER_SQL = "{CALL DeleteUser(?)}";
+    private static final String SELECT_USER_BY_COUNTRY_SQL = "SELECT * FROM users WHERE country = ?";
+    private static final String SELECT_ALL_WITH_PASSWORD_SQL = "SELECT u.name, u.email, a.password FROM users u JOIN account a ON u.id = a.user_id;";
 
     public UserDAO() {
     }
 
     public void insertUser(User user) throws SQLException {
-        System.out.println(INSERT_USER_SQL);
         try (Connection connection = BaseRepository.getConnectDB();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)) {
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getEmail());
-            preparedStatement.setString(3, user.getCountry());
-            System.out.println(preparedStatement);
-            preparedStatement.executeUpdate();
+             CallableStatement callableStatement = connection.prepareCall(INSERT_USER_SQL)) {
+
+
+            callableStatement.setString(1, user.getName());
+            callableStatement.setString(2, user.getEmail());
+            callableStatement.setString(3, user.getCountry());
+            callableStatement.registerOutParameter(4, java.sql.Types.INTEGER); // Thêm dòng này nếu có OUT parameter
+
+
+            callableStatement.executeUpdate();
+
+            // Lấy userId từ OUT parameter
+            int userId = callableStatement.getInt(4);
+            System.out.println("User ID of newly added user: " + userId); // Có thể in ra userId nếu cần
         } catch (SQLException e) {
             printSQLException(e);
         }
@@ -38,11 +43,11 @@ public class UserDAO implements IUserDAO {
     public User selectUser(int id) {
         User user = null;
         try (Connection connection = BaseRepository.getConnectDB();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID_SQL)) {
-            preparedStatement.setInt(1, id);
-            ResultSet rs = preparedStatement.executeQuery();
+             CallableStatement callableStatement = connection.prepareCall(SELECT_USER_BY_ID_SQL)) {
+            callableStatement.setInt(1, id);
+            ResultSet rs = callableStatement.executeQuery();
 
-            while (rs.next()) {
+            if (rs.next()) {
                 String name = rs.getString("name");
                 String email = rs.getString("email");
                 String country = rs.getString("country");
@@ -56,11 +61,10 @@ public class UserDAO implements IUserDAO {
 
     public List<User> selectAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        try {
-            Connection connection = BaseRepository.getConnectDB();
+        try (Connection connection = BaseRepository.getConnectDB();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS_SQL);
+             ResultSet rs = preparedStatement.executeQuery()) {
 
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS_SQL);
-            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -77,12 +81,19 @@ public class UserDAO implements IUserDAO {
 
     public boolean deleteUser(int id) throws SQLException {
         boolean rowDeleted = false;
-        try {
-            Connection connection = BaseRepository.getConnectDB();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_SQL);
+        // Xóa quyền liên quan trước
+        String deletePermissionsSQL = "DELETE FROM user_permission WHERE user_id = ?";
+        try (Connection connection = BaseRepository.getConnectDB();
+             PreparedStatement preparedStatement = connection.prepareStatement(deletePermissionsSQL)) {
             preparedStatement.setInt(1, id);
-            rowDeleted = preparedStatement.executeUpdate() > 0;
+            preparedStatement.executeUpdate();
+        }
+
+        // Sau đó xóa người dùng
+        try (Connection connection = BaseRepository.getConnectDB();
+             CallableStatement callableStatement = connection.prepareCall(DELETE_USER_SQL)) {
+            callableStatement.setInt(1, id);
+            rowDeleted = callableStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             printSQLException(e);
         }
@@ -92,13 +103,13 @@ public class UserDAO implements IUserDAO {
     public boolean updateUser(User user) throws SQLException {
         boolean rowUpdated = false;
         try (Connection connection = BaseRepository.getConnectDB();
-        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_SQL)){
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getEmail());
-            preparedStatement.setString(3, user.getCountry());
-            preparedStatement.setInt(4, user.getId());
-            rowUpdated = preparedStatement.executeUpdate() > 0;
-        } catch(SQLException e){
+             CallableStatement callableStatement = connection.prepareCall(UPDATE_USER_SQL)) {
+            callableStatement.setInt(1, user.getId());
+            callableStatement.setString(2, user.getName());
+            callableStatement.setString(3, user.getEmail());
+            callableStatement.setString(4, user.getCountry());
+            rowUpdated = callableStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
             printSQLException(e);
         }
         return rowUpdated;
@@ -111,7 +122,6 @@ public class UserDAO implements IUserDAO {
                 System.err.println("SQLState: " + ((SQLException) e).getSQLState());
                 System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
                 System.err.println("Message: " + e.getMessage());
-                System.err.println("Vendor Error Code: " + ((SQLException) e).getErrorCode());
                 Throwable t = e.getCause();
                 while (t != null) {
                     System.err.println("Cause: " + t.getMessage());
@@ -120,6 +130,7 @@ public class UserDAO implements IUserDAO {
             }
         }
     }
+
     public List<User> searchUser(String country) {
         List<User> users = new ArrayList<>();
         try (Connection connection = BaseRepository.getConnectDB();
@@ -132,20 +143,90 @@ public class UserDAO implements IUserDAO {
                 String name = rs.getString("name");
                 String email = rs.getString("email");
                 User user = new User(id, name, email, country);
-                users.add(user); // Add to the list
+                users.add(user);
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
         return users;
     }
+
+    public List<UsersDTO> selectAllUsersWithPassword() throws SQLException {
+        List<UsersDTO> users = new ArrayList<>();
+        try (Connection connection = BaseRepository.getConnectDB();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WITH_PASSWORD_SQL);
+             ResultSet rs = preparedStatement.executeQuery()) {
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                UsersDTO user = new UsersDTO(name, email, password);
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return users;
+    }
+
+    @Override
+    public void addUserTransaction(User user, List<Integer> permission) throws SQLException {
+        Connection connection = null;
+        CallableStatement callableStatement = null;
+        PreparedStatement permissionAssignStatement = null;
+        ResultSet rs = null;
+
+        try {
+            connection = BaseRepository.getConnectDB();
+            connection.setAutoCommit(false);
+
+            // Gọi stored procedure và đăng ký OUT parameter
+            callableStatement = connection.prepareCall("{CALL AddUser(?, ?, ?, ?)}");
+            callableStatement.setString(1, user.getName());
+            callableStatement.setString(2, user.getEmail());
+            callableStatement.setString(3, user.getCountry());
+            callableStatement.registerOutParameter(4, java.sql.Types.INTEGER); // Đăng ký OUT parameter
+
+            callableStatement.executeUpdate();
+
+            // Lấy userId từ OUT parameter
+            int userId = callableStatement.getInt(4);
+
+            // Gán quyền
+            if (permission != null && !permission.isEmpty()) {
+                String sqlPivot = "INSERT INTO user_permission (user_id, permission_id) VALUES (?, ?)";
+                permissionAssignStatement = connection.prepareStatement(sqlPivot);
+                for (Integer permissionId : permission) {
+                    permissionAssignStatement.setInt(1, userId);
+                    permissionAssignStatement.setInt(2, permissionId);
+                    permissionAssignStatement.executeUpdate();
+                }
+            }
+
+            connection.commit(); // Cam kết transaction
+        } catch (SQLException e) {
+            if (connection != null) connection.rollback(); // Hoàn tác nếu có lỗi
+            printSQLException(e);
+        } finally {
+            // Đóng kết nối và các tài nguyên
+            try {
+                if (rs != null) rs.close();
+                if (callableStatement != null) callableStatement.close();
+                if (permissionAssignStatement != null) permissionAssignStatement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException ex) {
+                printSQLException(ex);
+            }
+        }
+    }
     public List<User> selectAllUsersSortedByName() throws SQLException {
         List<User> users = new ArrayList<>();
-        String SQL_SELECT_ALL_USERS_SORTED = "SELECT * FROM users ORDER BY name"; // Sắp xếp theo tên
+        String SQL_SELECT_ALL_USERS_SORTED = "{CALL GetAllUsersSortedByName()}"; // Gọi stored procedure
 
         try (Connection connection = BaseRepository.getConnectDB();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_USERS_SORTED);
-             ResultSet rs = preparedStatement.executeQuery()) {
+             CallableStatement callableStatement = connection.prepareCall(SQL_SELECT_ALL_USERS_SORTED);
+             ResultSet rs = callableStatement.executeQuery()) {
 
             while (rs.next()) {
                 int id = rs.getInt("id");

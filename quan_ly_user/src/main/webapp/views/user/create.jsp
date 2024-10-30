@@ -5,7 +5,7 @@
   Time: 3:50 PM
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>User Management Application</title>
@@ -33,6 +33,15 @@
                 <th>Country</th>
                 <td>
                     <input type="text" name="country" required>
+                </td>
+            </tr>
+            <tr>
+                <th>Permisson:</th>
+                <td>
+                    <input type="checkbox" name="add" size="15"/> Add |
+                    <input type="checkbox" name="edit" size="15"/> Edit |
+                    <input type="checkbox" name="delete" size="15"/> Delete
+                    <input type="checkbox" name="view" size="15"/> View
                 </td>
             </tr>
             <tr>

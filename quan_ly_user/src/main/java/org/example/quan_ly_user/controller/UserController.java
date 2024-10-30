@@ -1,5 +1,6 @@
 package org.example.quan_ly_user.controller;
 
+import org.example.quan_ly_user.dto.UsersDTO;
 import org.example.quan_ly_user.model.User;
 import org.example.quan_ly_user.model.UserDAO;
 
@@ -11,11 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "UserController", urlPatterns = "/users")
 public class UserController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
     private UserDAO userDAO;
 
     public void init() {
@@ -62,7 +63,11 @@ public class UserController extends HttpServlet {
                     deleteUser(request, response);
                     break;
                 case "sortByName":
-                    selectAllUsersSortedbyName(request, response);
+                    selectAllUsersSortedByName(request, response);
+                    break;
+                case "showWithPassword":
+                    selectAllUsersWithPassword(request, response);
+                    break;
                 default:
                     listUsers(request, response);
                     break;
@@ -97,17 +102,33 @@ public class UserController extends HttpServlet {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String country = request.getParameter("country");
-        User newUser = new User(name, email, country);
-        userDAO.insertUser(newUser);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("views/user/list.jsp");
-        dispatcher.forward(request, response);
-        request.setAttribute("message", "User added successfully");
-        try {
-            dispatcher.forward(request, response);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
+
+        System.out.println("Received: Name=" + name + ", Email=" + email + ", Country=" + country);
+
+        List<Integer> permission = new ArrayList<>();
+        if (request.getParameter("add") != null) {
+            permission.add(1);
         }
-        response.sendRedirect("/views/user/list.jsp");
+        if (request.getParameter("edit") != null) {
+            permission.add(2);
+        }
+        if (request.getParameter("delete") != null) {
+            permission.add(3);
+        }
+        if (request.getParameter("view") != null) {
+            permission.add(4);
+        }
+
+        User newUser = new User(name, email, country);
+        try {
+            userDAO.addUserTransaction(newUser, permission);
+            request.setAttribute("message", "User added successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            request.setAttribute("message", "Error adding user.");
+        }
+
+        listUsers(request, response);
     }
 
     private void updateUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -117,10 +138,9 @@ public class UserController extends HttpServlet {
         String country = request.getParameter("country");
         User updatedUser = new User(id, name, email, country);
         userDAO.updateUser(updatedUser);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("views/user/edit.jsp");
         request.setAttribute("message", "User updated successfully");
         try {
-            dispatcher.forward(request, response);
+            listUsers(request, response);
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
@@ -147,12 +167,17 @@ public class UserController extends HttpServlet {
         request.getRequestDispatcher("views/user/search.jsp").forward(request, response);
     }
 
-    private void selectAllUsersSortedbyName(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    private void selectAllUsersSortedByName(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         List<User> listUsers = userDAO.selectAllUsersSortedByName();
         request.setAttribute("listUsers", listUsers);
         request.getRequestDispatcher("views/user/list.jsp").forward(request, response);
 
     }
 
+    private void selectAllUsersWithPassword(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        List<UsersDTO> showWithPassword = userDAO.selectAllUsersWithPassword();
+        request.setAttribute("showWithPassword", showWithPassword);
+        request.getRequestDispatcher("views/user/list_password.jsp").forward(request, response);
+    }
 }
 

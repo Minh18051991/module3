@@ -1,14 +1,19 @@
 package org.example.quan_ly_user.model;
 
+import org.example.quan_ly_user.dto.UsersDTO;
+
 import java.sql.SQLException;
 import java.util.List;
 
 public interface IUserDAO {
-    public void insertUser(User user) throws SQLException;
-    public User selectUser(int id);
-    public List<User> selectAllUsers() throws SQLException;
-    public boolean updateUser(User user) throws SQLException;
-    public boolean deleteUser(int id) throws SQLException;
-    public List<User> searchUser(String country) throws SQLException;
-    public List<User> selectAllUsersSortedByName() throws SQLException;
+    void insertUser(User user) throws SQLException; // Thêm người dùng
+    User selectUser(int id) throws SQLException; // Lấy người dùng theo ID
+    List<User> selectAllUsers() throws SQLException; // Lấy tất cả người dùng
+    boolean updateUser(User user) throws SQLException; // Cập nhật người dùng
+    boolean deleteUser(int id) throws SQLException; // Xóa người dùng
+    List<User> searchUser(String country) throws SQLException; // Tìm kiếm người dùng theo quốc gia
+    List<User> selectAllUsersSortedByName() throws SQLException; // Lấy tất cả người dùng sắp xếp theo tên
+    List<UsersDTO> selectAllUsersWithPassword() throws SQLException;
+    void addUserTransaction(User user, List<Integer> permission) throws SQLException;
+
 }
