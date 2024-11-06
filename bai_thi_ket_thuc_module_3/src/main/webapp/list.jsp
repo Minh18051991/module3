@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,16 +10,21 @@
       margin-top: 20px;
     }
   </style>
-
 </head>
 <body>
 <div class="container">
   <h1>Room Rentals</h1>
-  <a href="roomRentals?action=create" class="btn btn-primary">Create New</a>
-  <table class="table table-bordered table-striped mt-3">
+  <form action="roomRentals" method="get" class="form-inline mb-3">
+    <input type="hidden" name="action" value="search">
+    <input type="text" name="keyword" class="form-control mr-2" placeholder="Search by tenant name">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+  <a href="roomRentals?action=create" class="btn btn-primary mb-3">Create New</a>
+  <table class="table table-bordered table-striped">
     <thead>
     <tr>
       <th>Room ID</th>
+      <th>Room Code</th>
       <th>Tenant Name</th>
       <th>Phone Number</th>
       <th>Start Date</th>
@@ -31,6 +37,7 @@
     <c:forEach var="roomRental" items="${roomRentals}">
       <tr>
         <td>${roomRental.roomId}</td>
+        <td>RR-<fmt:formatNumber value="${roomRental.roomId}" pattern="000"/></td>
         <td>${roomRental.tenantName}</td>
         <td>${roomRental.phoneNumber}</td>
         <td>${roomRental.startDate}</td>
@@ -49,7 +56,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
   function confirmDelete(roomId) {
-    if (confirm("Ban muốn xóa  phòng trọ  nay?")) {
+    if (confirm("Ban muốn xóa phòng trọ này?")) {
       window.location.href = "roomRentals?action=delete&roomId=" + roomId;
     }
   }
