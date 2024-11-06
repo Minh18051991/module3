@@ -204,10 +204,10 @@ public class UserDAO implements IUserDAO {
                 }
             }
 
-            connection.commit(); // Cam kết transaction
+            connection.commit();
         } catch (SQLException e) {
             if (connection != null) {
-                connection.rollback(); // Hoàn tác nếu có lỗi
+                connection.rollback();
                 System.out.println("Transaction rolled back due to an error: " + e.getMessage());
             }
             printSQLException(e);
